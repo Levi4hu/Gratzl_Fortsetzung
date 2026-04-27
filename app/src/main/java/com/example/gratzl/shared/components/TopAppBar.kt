@@ -1,0 +1,71 @@
+package com.example.gratzl.shared.components
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppTopBar(
+    title: String = "Gratzl",
+    showBack: Boolean = false,
+    onBackClick: () -> Unit = {},
+    actionIcon: ImageVector? = null,
+    onActionClick: () -> Unit = {}
+) {
+    TopAppBar(
+        title = {
+            Text(
+                title,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        },
+        navigationIcon = {
+            if(showBack) {
+                IconButton(onClick = onBackClick) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Zurück")
+                }
+            }
+        },
+        actions = {
+            if(actionIcon != null) {
+                IconButton(onClick = onActionClick) {
+                    Icon(actionIcon, contentDescription = null)
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
+    )
+}
+
+
+/*
+TODO: TOPBAR Aufruf bei jeweiligen Screens
+Für Home, Search, Chat:
+AppTopBar(title = "Gratzl")
+
+Pfeil Zurück
+AppTopBar(
+  title = "Anzeige",
+    showBack = true,
+    onBackClick = { onNavigationBack() }
+
+Report Icon für Chat
+AppTopBar(
+  title = "Mara L.",
+  showBack = true,
+  onBackClick = { onNavigationBack() },
+  actionIcon = Icons.Filled.Flag,
+  onActionClick = { REPORT }
+ */
