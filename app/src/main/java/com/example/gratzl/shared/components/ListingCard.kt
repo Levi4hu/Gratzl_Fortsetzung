@@ -21,7 +21,6 @@ import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.shared.theme.Green80
 import com.example.gratzl.shared.theme.Teal80
 
-// Platzhalter — Levi baut die echte Version
 @Composable
 fun ListingCard(
     listing: Listing,
