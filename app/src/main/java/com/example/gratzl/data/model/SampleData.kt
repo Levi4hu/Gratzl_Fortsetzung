@@ -37,7 +37,7 @@ object SampleData {
         )
     )
 
-    val listings = listOf(
+    var listings = mutableListOf<Listing>(
         Listing(
             id = 1,
             title = "Nachhilfestunden Mathematik",
