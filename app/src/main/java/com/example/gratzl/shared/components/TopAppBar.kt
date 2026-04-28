@@ -2,6 +2,8 @@ package com.example.gratzl.shared.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -10,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,7 +22,11 @@ fun AppTopBar(
     showBack: Boolean = false,
     onBackClick: () -> Unit = {},
     actionIcon: ImageVector? = null,
-    onActionClick: () -> Unit = {}
+    onActionClick: () -> Unit = {},
+    showFavorite: Boolean = false,
+    isFavorite: Boolean = false,
+    onFavoriteClick: () -> Unit = {}
+    //showReport:
 ) {
     TopAppBar(
         title = {
@@ -37,6 +44,19 @@ fun AppTopBar(
             }
         },
         actions = {
+            if(showFavorite){
+                IconButton(onClick = onFavoriteClick){
+                    Icon(
+                        imageVector = if(isFavorite)
+                            Icons.Filled.Favorite
+                        else
+                        Icons.Filled.FavoriteBorder,
+                        contentDescription = "Favorit",
+                        tint= if(isFavorite) Color.Red
+                        else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
             if(actionIcon != null) {
                 IconButton(onClick = onActionClick) {
                     Icon(actionIcon, contentDescription = null)
