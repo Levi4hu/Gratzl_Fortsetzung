@@ -19,6 +19,22 @@ object SampleData {
             rating = 4.5f,
             skills = "Reparaturen, Umzug, Malerarbeiten"
         ),
+        UserProfile(
+            id = 3,
+            name = "Kali K.",
+            district = "Donaustadt",
+            bio = "Junger Familienvater mit Erfahrung mit Rohren.",
+            rating = 4.2f,
+            skills = "Reparaturen, Rohrverlegung"
+        ),
+        UserProfile(
+            id = 4,
+            name = "Luca C.",
+            district = "Leopoldstadt",
+            bio = "Infomratik Student spezifiziert auf Kotlin",
+            rating = 5.0f,
+            skills = "Programmierung, Kotlin, Java"
+        )
     )
 
     val listings = listOf(
