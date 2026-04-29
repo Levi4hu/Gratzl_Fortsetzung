@@ -61,6 +61,29 @@ object SampleData {
             urgency = UrgencyTag.TODAY,
             userId = 2
         ),
+        Listing(
+            id = 3,
+            title = "Biete Rohrreperatur",
+            description = "Schnelle Hilfe bei defekten Rohren.",
+            isOffer = true,
+            category = "Handwerk",
+            district = "Donaustadt",
+            priceType = PriceType.FIXED,
+            price = 100.0,
+            urgency = UrgencyTag.FLEXIBLE,
+            userId = 3
+        ),
+        Listing(
+            id = 4,
+            title = "Biete Programmierhilfe",
+            description = "Durch mein Uni Erfahrung in Programmieren kann ich einiges.",
+            isOffer = true,
+            category = "Bildung",
+            district = "Leopoldstadt",
+            priceType = PriceType.COFFEE,
+            urgency = UrgencyTag.FLEXIBLE,
+            userId = 4
+        )
     )
 
     val chats = listOf(
