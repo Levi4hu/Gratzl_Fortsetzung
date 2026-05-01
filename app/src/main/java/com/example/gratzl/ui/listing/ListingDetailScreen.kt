@@ -18,7 +18,6 @@ import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.shared.components.AppTopBar
 import com.example.gratzl.shared.components.UserAvatar
 import com.example.gratzl.shared.components.UrgencyChip
-import com.example.gratzl.shared.components.UserAvatar
 import com.example.gratzl.shared.theme.MarktplatzTheme
 
 @Composable
@@ -58,7 +57,6 @@ fun ListingDetailScreen(
                 }
 
             )
-            Spacer(modifier = Modifier.height(8.dp))
         },
         bottomBar = {
             val chat = com.example.gratzl.data.model.SampleData
@@ -66,15 +64,27 @@ fun ListingDetailScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 5.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(horizontal = 8.dp, vertical = 5.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 // Platz für linken Button (1/5)
-                Box(modifier = Modifier.weight(1f))
+                Box(modifier = Modifier.weight(0.5f))
+                IconButton(
+                    onClick  = { viewModel.toggleFavorite() },
+                    //modifier = Modifier.align(bottomEnd)
+                ) {
+                    Icon(
+                        imageVector = if (state.isFavorite)
+                            Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        contentDescription = "Favorit",
+                        tint = if (state.isFavorite) Color.Red
+                        else MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
 
                 Button(
                     onClick  = { chat?.let { onNavigateToChat(it.id) } },
-                    modifier = Modifier.weight(4f)
+                    modifier = Modifier.weight(15f)
                 ) {
                     Text("Nachricht senden")
                 }
@@ -100,19 +110,8 @@ fun ListingDetailScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                // Herz-Icon oben rechts
-                IconButton(
-                    onClick  = { viewModel.toggleFavorite() },
-                    modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    Icon(
-                        imageVector = if (state.isFavorite)
-                            Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                        contentDescription = "Favorit",
-                        tint = if (state.isFavorite) Color.Red
-                        else MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
+                // Bildrahmen oder vllt clickable action für die fulscreen bild ansicht?
+
             }
 
             Column(modifier = Modifier.padding(16.dp)) {
