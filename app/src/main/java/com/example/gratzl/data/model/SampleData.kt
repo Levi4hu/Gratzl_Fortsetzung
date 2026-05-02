@@ -112,15 +112,49 @@ object SampleData {
         )
     )
 
-    val chats = listOf(
+    val chats = mutableListOf(
         Chat(
             id = 1,
             listingId = 1,
             partnerId = 2,
             messages = listOf(
-                ChatMessage(1, 1, 2, "Hallo, ist der Platz noch frei?", "14:30"),
-                ChatMessage(2, 1, 1, "Ja! Wann passt dir?", "14:32"),
-                ChatMessage(3, 1, 2, "Freitag um 17 Uhr?", "14:33"),
+                ChatMessage(1, 1, 2, "Hallo Anna, ist ein Nachhilfeplatz noch frei?", "14:30"),
+                ChatMessage(2, 1, 1, "Ja, diese Woche habe ich noch Zeit.", "14:32"),
+                ChatMessage(3, 1, 2, "Perfekt. Passt Donnerstag um 17 Uhr?", "14:35"),
+                ChatMessage(4, 1, 1, "Donnerstag passt gut. Ich bereite Aufgaben vor.", "14:38"),
+            )
+        ),
+        Chat(
+            id = 2,
+            listingId = 2,
+            partnerId = 2,
+            messages = listOf(
+                ChatMessage(5, 2, 1, "Hallo Ben, ich kann dir am Samstag beim Umzug helfen.", "Gestern"),
+                ChatMessage(6, 2, 2, "Super, wir starten um 9 Uhr in Mariahilf.", "Gestern"),
+                ChatMessage(7, 2, 1, "Passt. Soll ich Werkzeug mitbringen?", "Gestern"),
+                ChatMessage(8, 2, 2, "Ein Akkuschrauber wäre sehr hilfreich.", "Heute"),
+            )
+        ),
+        Chat(
+            id = 3,
+            listingId = 3,
+            partnerId = 3,
+            messages = listOf(
+                ChatMessage(9, 3, 1, "Hallo Kali, ich habe ein Problem mit dem Waschbecken.", "Mo"),
+                ChatMessage(10, 3, 3, "Kannst du mir ein Foto und den Bezirk schicken?", "Mo"),
+                ChatMessage(11, 3, 1, "Donaustadt, der Ablauf ist undicht.", "Mo"),
+                ChatMessage(12, 3, 3, "Ich kann morgen am Nachmittag vorbeikommen.", "Mo"),
+            )
+        ),
+        Chat(
+            id = 4,
+            listingId = 4,
+            partnerId = 4,
+            messages = listOf(
+                ChatMessage(13, 4, 1, "Hallo Luca, ich brauche Hilfe bei einer Kotlin-Aufgabe.", "So"),
+                ChatMessage(14, 4, 4, "Gerne. Geht es um Compose oder Grundlagen?", "So"),
+                ChatMessage(15, 4, 1, "Es geht um Navigation in Compose.", "So"),
+                ChatMessage(16, 4, 4, "Das kann ich dir heute Abend erklären.", "So"),
             )
         ),
     )
@@ -129,4 +163,12 @@ object SampleData {
     fun getListingById(id: Int) = listings.find { it.id == id }
     fun getChatById(id: Int) = chats.find { it.id == id }
     fun getChatForListing(listingId: Int) = chats.find { it.listingId == listingId }
+
+    fun addMessageToChat(chatId: Int, message: ChatMessage) {
+        val index = chats.indexOfFirst { it.id == chatId }
+        if (index == -1) return
+
+        val chat = chats[index]
+        chats[index] = chat.copy(messages = chat.messages + message)
+    }
 }
