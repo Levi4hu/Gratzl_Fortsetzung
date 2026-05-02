@@ -5,19 +5,35 @@ object SampleData {
     val users = listOf(
         UserProfile(
             id = 1,
-            name = "Anna M.",
-            district = "Favoriten",
-            bio = "Studentin, hilft gerne bei Nachhilfe und Gartenarbeit.",
-            rating = 4.8f,
-            skills = "Nachhilfe, Gartenarbeit, Hundesitter"
+            name = "Sophie Huber",
+            district = "Wien Leopoldstadt",
+            bio = "Hilfsbereite Nachbarin aus dem 2. Bezirk. Ich biete Unterstützung beim Einkaufen, Pflanzengießen und kleine Reparaturen im Haushalt an.",
+            rating = 4.9f,
+            reviewCount = 12,
+            responseTime = "2h",
+            responseSpeedLabel = "SEHR SCHNELL",
+            skills = listOf(
+                UserSkill("Gartenhilfe", "Gießen & Pflege von Zimmer- und Balkonpflanzen."),
+                UserSkill("Einkäufe", "Wöchentliche Besorgungen und schwere Taschen."),
+                UserSkill("Reparaturen", "Kleinere handwerkliche Hilfe im Haushalt."),
+                UserSkill("Pet-Sitting", "Hunde ausführen oder Katzen füttern.")
+            )
         ),
         UserProfile(
             id = 2,
-            name = "Ben K.",
-            district = "Mariahilf",
-            bio = "Handwerker mit Erfahrung.",
-            rating = 4.5f,
-            skills = "Reparaturen, Umzug, Malerarbeiten"
+            name = "Markus Weber",
+            district = "Wien Leopoldstadt",
+            bio = "Ich helfe gerne meinen Nachbarn im 2. Bezirk bei alltäglichen Aufgaben. Zuverlässigkeit und ein freundlicher Umgang sind mir wichtig.",
+            rating = 4.9f,
+            reviewCount = 12,
+            responseTime = "< 1h",
+            responseSpeedLabel = "SEHR SCHNELL",
+            skills = listOf(
+                UserSkill("Gartenhilfe"),
+                UserSkill("Einkäufe"),
+                UserSkill("Reparaturen"),
+                UserSkill("Pet-Sitting")
+            )
         ),
         UserProfile(
             id = 3,
@@ -25,17 +41,27 @@ object SampleData {
             district = "Donaustadt",
             bio = "Junger Familienvater mit Erfahrung mit Rohren.",
             rating = 4.2f,
-            skills = "Reparaturen, Rohrverlegung"
+            reviewCount = 5,
+            skills = listOf(
+                UserSkill("Reparaturen", "Kleine Reparaturen im Haushalt."),
+                UserSkill("Rohrverlegung")
+            )
         ),
         UserProfile(
             id = 4,
             name = "Luca C.",
             district = "Leopoldstadt",
-            bio = "Infomratik Student spezifiziert auf Kotlin",
+            bio = "Informatik Student mit Erfahrung in Kotlin.",
             rating = 5.0f,
-            skills = "Programmierung, Kotlin, Java"
+            reviewCount = 8,
+            skills = listOf(
+                UserSkill("Programmierung"),
+                UserSkill("Kotlin"),
+                UserSkill("Java")
+            )
         )
     )
+
 
     var listings = mutableListOf<Listing>(
         Listing(

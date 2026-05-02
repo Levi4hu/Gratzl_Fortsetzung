@@ -4,6 +4,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +26,8 @@ fun AppTopBar(
     actionIcon: ImageVector? = null,
     onActionClick: () -> Unit = {},
     showFavorite: Boolean = false,
+    showFlagReport: Boolean = false,
+    showSettings: Boolean = false,
     isFavorite: Boolean = false,
     onFavoriteClick: () -> Unit = {}
     //showReport:
@@ -54,6 +58,23 @@ fun AppTopBar(
                         contentDescription = "Favorit",
                         tint= if(isFavorite) Color.Red
                         else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+            if (showFlagReport){
+                IconButton(onClick = { /* später Report-Logik */ }) {
+                    Icon(
+                        imageVector = Icons.Default.Flag,
+                        contentDescription = "Profil melden"
+                    )
+                }
+            }
+            if (showSettings) {
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Einstellungen",
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }

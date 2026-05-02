@@ -75,11 +75,16 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.LISTING_DETAIL) { backStack ->
                             val id = backStack.arguments?.getString("listingId")?.toIntOrNull() ?: return@composable
                             ListingDetailScreen(
-                                listingId        = id,
+                                listingId = id,
                                 onNavigateToChat = { chatId ->
                                     navController.navigate(Routes.chatDetail(chatId))
                                 },
-                                onNavigateBack   = { navController.popBackStack() }
+                                onNavigateToProfile = { userId ->
+                                    navController.navigate(Routes.profileDetail(userId))
+                                },
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
                             )
                         }
                         composable(Routes.CHAT_DETAIL) { backStack ->
@@ -94,9 +99,18 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.PROFILE_DETAIL) { backStack ->
                             val id = backStack.arguments?.getString("userId")?.toIntOrNull() ?: return@composable
+
                             ProfileDetailScreen(
-                                userId         = id,
-                                onNavigateBack = { navController.popBackStack() }
+                                userId = id,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToListing = { listingId ->
+                                    navController.navigate(Routes.listingDetail(listingId))
+                                },
+                                onNavigateToChat = { chatId ->
+                                    navController.navigate(Routes.chatDetail(chatId))
+                                }
                             )
                         }
                     }

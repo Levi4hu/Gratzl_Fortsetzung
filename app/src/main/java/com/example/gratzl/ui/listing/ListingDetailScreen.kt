@@ -1,6 +1,7 @@
 package com.example.gratzl.ui.listing
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -24,6 +25,7 @@ import com.example.gratzl.shared.theme.MarktplatzTheme
 fun ListingDetailScreen(
     listingId: Int,
     onNavigateToChat: (Int) -> Unit,
+    onNavigateToProfile: (Int) -> Unit, // neu von Greta eingefügt
     onNavigateBack: () -> Unit,
     viewModel: ListingDetailViewModel = viewModel()
 ) {
@@ -127,6 +129,9 @@ fun ListingDetailScreen(
                 // User Info
                 if (user != null) {
                     Row(
+                        modifier = Modifier.clickable {
+                            user?.let { onNavigateToProfile(it.id) }
+                        },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -185,6 +190,7 @@ private fun ListingDetailScreenPreview() {
         ListingDetailScreen(
             listingId        = 1,
             onNavigateToChat = {},
+            onNavigateToProfile = {},
             onNavigateBack   = {}
         )
     }
