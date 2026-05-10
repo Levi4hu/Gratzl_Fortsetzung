@@ -23,29 +23,30 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gratzl.shared.components.AppTopBar
 import com.example.gratzl.shared.components.GraetzelLogo
 import com.example.gratzl.shared.components.ListingCard
 import com.example.gratzl.shared.components.Switch
-import com.example.gratzl.shared.theme.MarktplatzTheme
-
 
 @Composable
 fun SearchScreen(
-    selectedBezirk : String,
-    onBezirkChange : (String) -> Unit,
+    selectedBezirk: String,
+    onBezirkChange: (String) -> Unit,
     onNavigateToListing: (Int) -> Unit,
     viewModel: SearchViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
     val categories = listOf(null, "Bildung", "Haushalt", "Handwerk", "Garten")
+
+    LaunchedEffect(selectedBezirk) {
+        viewModel.onBezirkChange(selectedBezirk)
+    }
 
     Scaffold(
         topBar = {
@@ -56,7 +57,10 @@ fun SearchScreen(
             ) {
                 GraetzelLogo(
                     selectedBezirk = selectedBezirk,
-                    onBezirkChange = onBezirkChange
+                    onBezirkChange = { newBezirk ->
+                        onBezirkChange(newBezirk)
+                        viewModel.onBezirkChange(newBezirk)
+                    }
                 )
             }
         }
@@ -67,8 +71,6 @@ fun SearchScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
-
-            //Switch
             Switch(
                 isOfferMode = state.isOfferMode,
                 onToggle = { viewModel.toggleMode(it) }
@@ -76,7 +78,6 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            //Suchleiste
             OutlinedTextField(
                 value = state.query,
                 onValueChange = { viewModel.onQueryChange(it) },
@@ -89,7 +90,6 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            //Kategorie Filter
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 contentPadding = PaddingValues(end = 8.dp)
@@ -106,7 +106,6 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            //Anzeige Grid
             if (state.results.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),

@@ -11,7 +11,8 @@ data class SearchUiState(
     val query: String = "",
     val results: List<Listing> = SampleData.listings,
     val isOfferMode: Boolean = true,
-    val selectedCategory: String? = null
+    val selectedCategory: String? = null,
+    val selectedBezirk: String = "Wien"
 )
 
 class SearchViewModel : ViewModel() {
@@ -19,6 +20,11 @@ class SearchViewModel : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     init { applyFilters() }
+
+    fun onBezirkChange(bezirk: String) {
+        _uiState.update { it.copy(selectedBezirk = bezirk) }
+        applyFilters()
+    }
 
     fun onQueryChange(newQuery: String) {
         _uiState.update { it.copy(query = newQuery) }
@@ -37,8 +43,12 @@ class SearchViewModel : ViewModel() {
 
     private fun applyFilters() {
         val state = _uiState.value
+        val districtName = state.selectedBezirk
+            .substringAfter("· ")
+            .trim()
         val filtered = SampleData.listings
             .filter { it.isOffer == state.isOfferMode }
+            .filter { state.selectedBezirk == "Wien" || it.district.contains(districtName, ignoreCase = true) }
             .filter { state.query.isBlank() || it.title.contains(state.query, ignoreCase = true) }
             .filter { state.selectedCategory == null || it.category == state.selectedCategory }
         _uiState.update { it.copy(results = filtered) }

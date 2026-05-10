@@ -31,6 +31,10 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(selectedBezirk) {
+        viewModel.onDistrictSelected(selectedBezirk)
+    }
+
     Scaffold(
         topBar = {
             Box(
