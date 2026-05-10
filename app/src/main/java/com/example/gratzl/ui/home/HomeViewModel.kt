@@ -61,10 +61,16 @@ class HomeViewModel : ViewModel() {
     private fun applyFilter() {
         val state = _uiState.value
 
+        val districtName = state.selectedDistrict
+            .substringAfter("· ")
+            .trim()
+
         val districtFiltered = if (state.selectedDistrict == "Wien") {
             SampleData.listings
         } else {
-            SampleData.listings.filter { it.district == state.selectedDistrict }
+            SampleData.listings.filter {
+                it.district.contains(districtName, ignoreCase = true)
+            }
         }
 
         val forYou = districtFiltered.filter {
@@ -76,7 +82,7 @@ class HomeViewModel : ViewModel() {
         }
 
         val nearby = SampleData.listings
-            .filter { it.district == state.selectedDistrict }
+            .filter { it.district.contains(districtName, ignoreCase = true) }
             .filter {
                 when (state.filter) {
                     HomeFilter.ALL      -> true

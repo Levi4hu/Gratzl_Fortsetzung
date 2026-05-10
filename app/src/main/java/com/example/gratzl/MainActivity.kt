@@ -4,13 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.gratzl.shared.components.GraetzelLogo
 import com.example.gratzl.shared.navigation.BottomNavBar
 import com.example.gratzl.shared.navigation.Routes
 import com.example.gratzl.shared.theme.MarktplatzTheme
@@ -29,6 +33,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var isOfferMode by remember { mutableStateOf(true) }
+            var selectedBezirk by remember { mutableStateOf("1070 · Neubau") }
 
             MarktplatzTheme(isOfferMode = isOfferMode) {
                 val navController = rememberNavController()
@@ -43,6 +48,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Routes.HOME) {
                             HomeScreen(
+                                selectedBezirk = selectedBezirk,
+                                onBezirkChange = { selectedBezirk = it },
                                 onNavigateToListing = { id ->
                                     navController.navigate(Routes.listingDetail(id))
                                 }
@@ -50,6 +57,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.SEARCH) {
                             SearchScreen(
+                                selectedBezirk = selectedBezirk,
+                                onBezirkChange = { selectedBezirk = it },
                                 onNavigateToListing = { id ->
                                     navController.navigate(Routes.listingDetail(id))
                                 }

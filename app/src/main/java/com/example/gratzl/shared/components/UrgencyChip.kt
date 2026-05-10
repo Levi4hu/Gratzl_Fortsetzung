@@ -17,7 +17,7 @@ fun UrgencyChip(urgency: UrgencyTag) {
     val label = when (urgency) {
         UrgencyTag.FLEXIBLE -> "Flexible"
         UrgencyTag.TODAY    -> "Today"
-        UrgencyTag.URGENT   -> "Urgent"
+        UrgencyTag.URGENT   -> "Urgent" //Dringend FireEmotio
     }
     Surface(
         shape = RoundedCornerShape(20.dp),

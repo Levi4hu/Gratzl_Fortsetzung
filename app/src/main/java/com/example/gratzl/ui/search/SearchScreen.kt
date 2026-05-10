@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gratzl.shared.components.AppTopBar
+import com.example.gratzl.shared.components.GraetzelLogo
 import com.example.gratzl.shared.components.ListingCard
 import com.example.gratzl.shared.components.Switch
 import com.example.gratzl.shared.theme.MarktplatzTheme
@@ -38,6 +39,8 @@ import com.example.gratzl.shared.theme.MarktplatzTheme
 
 @Composable
 fun SearchScreen(
+    selectedBezirk : String,
+    onBezirkChange : (String) -> Unit,
     onNavigateToListing: (Int) -> Unit,
     viewModel: SearchViewModel = viewModel()
 ) {
@@ -45,7 +48,18 @@ fun SearchScreen(
     val categories = listOf(null, "Bildung", "Haushalt", "Handwerk", "Garten")
 
     Scaffold(
-        topBar = { AppTopBar(title = "Gratzl") }
+        topBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                GraetzelLogo(
+                    selectedBezirk = selectedBezirk,
+                    onBezirkChange = onBezirkChange
+                )
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -53,7 +67,6 @@ fun SearchScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(12.dp))
 
             //Switch
             Switch(

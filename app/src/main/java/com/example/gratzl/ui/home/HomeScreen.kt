@@ -17,61 +17,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gratzl.data.model.Listing
+import com.example.gratzl.shared.components.GraetzelLogo
 import com.example.gratzl.shared.components.ListingCard
 import com.example.gratzl.shared.components.SwitchAll
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    selectedBezirk : String,
+    onBezirkChange : (String) -> Unit,
     onNavigateToListing: (Int) -> Unit,
     viewModel: HomeViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-    var districtExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    ExposedDropdownMenuBox(
-                        expanded         = districtExpanded,
-                        onExpandedChange = { districtExpanded = it }
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier          = Modifier.menuAnchor()
-                        ) {
-                            Text(
-                                text  = state.selectedDistrict,
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Icon(
-                                imageVector        = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = null,
-                                tint               = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        ExposedDropdownMenu(
-                            expanded         = districtExpanded,
-                            onDismissRequest = { districtExpanded = false }
-                        ) {
-                            state.availableDistricts.forEach { district ->
-                                DropdownMenuItem(
-                                    text    = { Text(district) },
-                                    onClick = {
-                                        viewModel.onDistrictSelected(district)
-                                        districtExpanded = false
-                                    }
-                                )
-                            }
-                        }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                GraetzelLogo(
+                    selectedBezirk = selectedBezirk,
+                    onBezirkChange = { newBezirk ->
+                        onBezirkChange(newBezirk)
+                        viewModel.onDistrictSelected(newBezirk)
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
                 )
-            )
+            }
         }
     ) { innerPadding ->
         LazyColumn(
