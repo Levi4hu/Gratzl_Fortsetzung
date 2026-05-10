@@ -21,9 +21,6 @@ data class SavedSearch(
 data class HomeUiState(
     val filter: HomeFilter = HomeFilter.ALL,
     val selectedDistrict: String = "Wien",
-    val availableDistricts: List<String> = listOf(
-        "Wien", "Favoriten", "Mariahilf", "Donaustadt", "Leopoldstadt"
-    ),
     val favourites: Set<Int> = emptySet(),
     val forYou: List<Listing> = emptyList(),
     val nearby: List<Listing> = emptyList(),
