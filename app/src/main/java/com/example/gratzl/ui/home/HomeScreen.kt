@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gratzl.data.model.Listing
@@ -40,6 +41,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .statusBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 GraetzelLogo(
@@ -53,11 +55,11 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         LazyColumn(
-            modifier            = Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding      = PaddingValues(bottom = 16.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding      = PaddingValues(bottom = 100.dp)
         ) {
             // Alle / Angebote / Anfragen switch
             item {
@@ -97,27 +99,43 @@ fun HomeScreen(
                     )
                     LazyRow(
                         contentPadding        = PaddingValues(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.height(130.dp)
                     ) {
                         items(state.savedSearches, key = { it.id }) { search ->
                             Card(
                                 onClick  = { },
                                 shape    = RoundedCornerShape(16.dp),
-                                modifier = Modifier.width(120.dp)
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .height(100.dp)
                             ) {
-                                Column(
-                                    modifier            = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier.fillMaxSize()
                                 ) {
-                                    Text(search.categoryIcon, style = MaterialTheme.typography.displaySmall)
-                                    // ↑ kikommentelni ha nem kell ikon: // Text(search.categoryIcon, ...)
-                                    Text(
-                                        text  = search.label,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            search.categoryIcon,
+                                            style = MaterialTheme.typography.headlineMedium,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                        // ↑ kikommentelni ha nem kell ikon: // Text(search.categoryIcon, ...)
+                                        Text(
+                                            text = search.label,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            maxLines = 1,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
                                 }
                             }
                         }

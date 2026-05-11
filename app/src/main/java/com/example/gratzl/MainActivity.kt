@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -39,7 +40,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 Scaffold(
-                    bottomBar = { BottomNavBar(navController) }
+                    bottomBar = { BottomNavBar(navController) },
+                    contentWindowInsets = WindowInsets(0,0,0,0)
                 ) { innerPadding ->
                     NavHost(
                         navController    = navController,
