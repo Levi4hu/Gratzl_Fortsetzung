@@ -12,10 +12,17 @@ data class UserProfile(
     val skills: List<UserSkill> = emptyList(),
     val responseTime: String = "< 2h",
     val responseSpeedLabel: String = "SEHR SCHNELL",
-    val availableDayNumbers: List<Int> = listOf(22, 24, 25, 28)
+    val availableDayNumbers: List<Int> = listOf(22, 24, 25, 28),
+    val reviews: List<UserReview> = emptyList()
 )
 
 data class UserSkill(
     val title: String,
     val description: String = ""
+)
+
+data class UserReview(
+    val authorName: String,
+    val stars: Float,
+    val text: String
 )

@@ -29,7 +29,9 @@ fun AppTopBar(
     showFlagReport: Boolean = false,
     showSettings: Boolean = false,
     isFavorite: Boolean = false,
-    onFavoriteClick: () -> Unit = {}
+    onFavoriteClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
+    onFlagReportClick: () -> Unit = {}
     //showReport:
 ) {
     TopAppBar(
@@ -61,16 +63,17 @@ fun AppTopBar(
                     )
                 }
             }
-            if (showFlagReport){
-                IconButton(onClick = { /* später Report-Logik */ }) {
+            if (showFlagReport) {
+                IconButton(onClick = onFlagReportClick) {
                     Icon(
                         imageVector = Icons.Default.Flag,
                         contentDescription = "Profil melden"
                     )
                 }
             }
+
             if (showSettings) {
-                IconButton(onClick = {}) {
+                IconButton(onClick = onSettingsClick) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Einstellungen",

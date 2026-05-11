@@ -27,6 +27,7 @@ import com.example.gratzl.ui.chat.ChatScreen
 import com.example.gratzl.ui.profile.ProfileScreen
 import com.example.gratzl.ui.profile.ProfileDetailScreen
 import com.example.gratzl.ui.listing.ListingDetailScreen
+import com.example.gratzl.ui.profile.SavedListingsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +81,20 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.PROFILE) {
                             ProfileScreen(
-                                onNavigateToSettings = { }
+                                onNavigateToSettings = { },
+                                onNavigateToSavedListings = {
+                                    navController.navigate(Routes.SAVED_LISTINGS)
+                                }
+                            )
+                        }
+                        composable(Routes.SAVED_LISTINGS) {
+                            SavedListingsScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToListing = { listingId ->
+                                    navController.navigate(Routes.listingDetail(listingId))
+                                }
                             )
                         }
                         composable(Routes.LISTING_DETAIL) { backStack ->

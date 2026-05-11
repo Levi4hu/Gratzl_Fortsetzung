@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gratzl.data.model.SampleData
 import com.example.gratzl.shared.components.AppTopBar
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ProfileDetailScreen(
@@ -21,6 +23,10 @@ fun ProfileDetailScreen(
 ) {
     val user = SampleData.getUserById(userId)
     val listings = SampleData.listings.filter { it.userId == userId }
+    val context = LocalContext.current
+    val showWorkInProgress = {
+        Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
+    }
 
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -35,7 +41,8 @@ fun ProfileDetailScreen(
                 title       = "Neue Anzeige",
                 showBack    = true,
                 showFlagReport = true,
-                onBackClick = onNavigateBack
+                onBackClick = onNavigateBack,
+                onFlagReportClick = showWorkInProgress
             )
         },
         bottomBar = {
@@ -44,6 +51,8 @@ fun ProfileDetailScreen(
                     val existingChat = SampleData.chats.firstOrNull { it.partnerId == userId }
                     if (existingChat != null) {
                         onNavigateToChat(existingChat.id)
+                    } else {
+                        showWorkInProgress()
                     }
                 },
                 modifier = Modifier
@@ -75,7 +84,13 @@ fun ProfileDetailScreen(
                 isOwnProfile = false
             )
 
-            ProfileStatsRow(user)
+            ReviewsHorizontalSection(
+                reviews = user.reviews
+            )
+
+            ResponseTimeCard(
+                user = user
+            )
 
             AvailabilityCard(
                 user = user,
@@ -90,7 +105,8 @@ fun ProfileDetailScreen(
 
             ActiveListingsCard(
                 listings = listings,
-                onNavigateToListing = onNavigateToListing
+                onNavigateToListing = onNavigateToListing,
+                onShowWorkInProgress = showWorkInProgress
             )
 
             Spacer(modifier = Modifier.height(80.dp))

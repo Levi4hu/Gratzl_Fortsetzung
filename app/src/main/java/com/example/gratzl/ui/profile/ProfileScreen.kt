@@ -12,12 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gratzl.data.model.SampleData
 import com.example.gratzl.shared.components.AppTopBar
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun ProfileScreen(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToSavedListings: () -> Unit
 ) {
     val user = SampleData.getUserById(1)
+    val context = LocalContext.current
+    val showWorkInProgress = {
+        Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
+    }
+    val savedListingCount = SampleData.savedListings.size
+
 
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -31,7 +41,7 @@ fun ProfileScreen(
             AppTopBar(
                 title = "Mein Profil",
                 showSettings = true,
-                onBackClick = {}
+                onBackClick = showWorkInProgress
             ) },
     ) { innerPadding ->
         Column(
@@ -45,32 +55,36 @@ fun ProfileScreen(
             ProfileHeaderCard(
                 user = user,
                 isOwnProfile = true,
-                onEditClick = {}
+                onEditClick = showWorkInProgress
             )
 
-            ProfileStatsRow(user)
+            ProfileStatsRow(
+                user = user,
+                savedListingCount = savedListingCount,
+                onSavedListingsClick = onNavigateToSavedListings
+            )
 
             OwnProfileMenuCard(
-                onPersonalDataClick = {},
-                onListingsClick = {},
-                onSupportClick = {}
+                onPersonalDataClick = showWorkInProgress,
+                onListingsClick = showWorkInProgress,
+                onSupportClick = showWorkInProgress
             )
 
             AvailabilityCard(
                 user = user,
                 showEdit = true,
-                onEditClick = {}
+                onEditClick = showWorkInProgress
             )
 
             SkillsCard(
                 skills = user.skills,
                 isOwnProfile = true,
                 detailed = true,
-                onEditClick = {}
+                onEditClick = showWorkInProgress
             )
 
             OutlinedButton(
-                onClick = {},
+                onClick = showWorkInProgress,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MaterialTheme.colorScheme.error

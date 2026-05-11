@@ -17,6 +17,23 @@ object SampleData {
                 UserSkill("Einkäufe", "Wöchentliche Besorgungen und schwere Taschen."),
                 UserSkill("Reparaturen", "Kleinere handwerkliche Hilfe im Haushalt."),
                 UserSkill("Pet-Sitting", "Hunde ausführen oder Katzen füttern.")
+            ),
+            reviews = listOf(
+                UserReview(
+                    authorName = "Markus",
+                    stars = 5.0f,
+                    text = "Sehr zuverlässig und freundlich. Hat mir kurzfristig beim Einkaufen geholfen."
+                ),
+                UserReview(
+                    authorName = "Anna",
+                    stars = 4.8f,
+                    text = "Schnelle Antwort und sehr angenehme Kommunikation."
+                ),
+                UserReview(
+                    authorName = "Peter",
+                    stars = 4.9f,
+                    text = "Die Pflanzen wurden super gepflegt. Gerne wieder!"
+                )
             )
         ),
         UserProfile(
@@ -33,6 +50,23 @@ object SampleData {
                 UserSkill("Einkäufe"),
                 UserSkill("Reparaturen"),
                 UserSkill("Pet-Sitting")
+            ),
+            reviews = listOf(
+                UserReview(
+                    authorName = "Sophie",
+                    stars = 4.9f,
+                    text = "Sehr freundlich und pünktlich. Die Hilfe war genau wie abgesprochen."
+                ),
+                UserReview(
+                    authorName = "Luca",
+                    stars = 5.0f,
+                    text = "Hat schnell geantwortet und zuverlässig geholfen."
+                ),
+                UserReview(
+                    authorName = "Maria",
+                    stars = 4.8f,
+                    text = "Gute Kommunikation und sehr hilfsbereit."
+                )
             )
         ),
         UserProfile(
@@ -149,6 +183,11 @@ object SampleData {
             )
         )
     )
+
+    val savedListingIds = listOf(1, 2, 3)
+
+    val savedListings: List<Listing>
+        get() = listings.filter { it.id in savedListingIds }
 
     var listings = mutableListOf<Listing>(
         // Innere Stadt

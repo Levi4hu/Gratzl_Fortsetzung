@@ -21,6 +21,10 @@ import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.data.model.UserProfile
 import com.example.gratzl.data.model.UserSkill
 import com.example.gratzl.shared.components.UserAvatar
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import com.example.gratzl.data.model.UserReview
+
 
 @Composable
 fun ProfileHeaderCard(
@@ -51,55 +55,29 @@ fun ProfileHeaderCard(
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = if (isOwnProfile) Alignment.Start else Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (isOwnProfile) {
-                    Row(verticalAlignment = Alignment.Top) {
-                        UserAvatar(user = user, size = 88.dp)
+                UserAvatar(user = user, size = 88.dp)
 
-                        Spacer(modifier = Modifier.width(18.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = user.name,
-                                style = MaterialTheme.typography.titleLarge
-                            )
+                Text(
+                    text = user.name,
+                    style = MaterialTheme.typography.titleLarge
+                )
 
-                            Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-                            RatingAndLocationRow(user)
+                RatingAndLocationRow(user)
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
-                            Text(
-                                text = user.bio,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                } else {
-                    UserAvatar(user = user, size = 88.dp)
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = user.name,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    RatingAndLocationRow(user)
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = user.bio,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Text(
+                    text = user.bio,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = if (isOwnProfile) Int.MAX_VALUE else 2,
+                    overflow = if (isOwnProfile) TextOverflow.Clip else TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -149,13 +127,19 @@ private fun RatingAndLocationRow(user: UserProfile) {
     }
 }
 
+
 @Composable
-fun ProfileStatsRow(user: UserProfile) {
+fun ProfileStatsRow(
+    user: UserProfile,
+    savedListingCount: Int,
+    onSavedListingsClick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Card(
+            onClick = onSavedListingsClick,
             modifier = Modifier
                 .weight(1f)
                 .height(112.dp),
@@ -174,12 +158,13 @@ fun ProfileStatsRow(user: UserProfile) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = user.reviewCount.toString(),
+                        text = savedListingCount.toString(),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
+
                     Text(
-                        text = "Reviews",
+                        text = "Gespeichert",
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -215,7 +200,9 @@ fun ProfileStatsRow(user: UserProfile) {
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
                         text = user.responseTime,
                         style = MaterialTheme.typography.titleLarge,
@@ -236,6 +223,146 @@ fun ProfileStatsRow(user: UserProfile) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ResponseTimeCard(
+    user: UserProfile
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(92.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Bolt,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = user.responseTime,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Antwortzeit:",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = user.responseSpeedLabel,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ReviewsHorizontalSection(
+    reviews: List<UserReview>
+) {
+    Column {
+        Text(
+            text = "Reviews",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(start = 4.dp, bottom = 10.dp)
+        )
+
+        if (reviews.isEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text(
+                    text = "Noch keine Reviews vorhanden.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(18.dp)
+                )
+            }
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(horizontal = 2.dp)
+            ) {
+                items(reviews) { review ->
+                    ReviewCard(review = review)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ReviewCard(
+    review: UserReview
+) {
+    Card(
+        modifier = Modifier
+            .width(190.dp)
+            .height(130.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(18.dp)
+                )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = review.stars.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = review.authorName,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text(
+                text = review.text,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -501,7 +628,8 @@ private fun skillIcon(title: String): ImageVector {
 @Composable
 fun ActiveListingsCard(
     listings: List<Listing>,
-    onNavigateToListing: (Int) -> Unit
+    onNavigateToListing: (Int) -> Unit,
+    onShowWorkInProgress: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -515,7 +643,7 @@ fun ActiveListingsCard(
                     modifier = Modifier.weight(1f)
                 )
 
-                TextButton(onClick = {}) {
+                TextButton(onClick = onShowWorkInProgress) {
                     Text("Alle (${listings.size})")
                 }
             }
