@@ -12,7 +12,9 @@ data class SearchUiState(
     val results: List<Listing> = SampleData.listings,
     val isOfferMode: Boolean = true,
     val selectedCategory: String? = null,
-    val selectedBezirk: String = "Wien"
+    val selectedBezirk: String = "Wien",
+    val offerCount: Int = 0,
+    val requestCount: Int = 0
 )
 
 class SearchViewModel : ViewModel() {
@@ -46,11 +48,17 @@ class SearchViewModel : ViewModel() {
         val districtName = state.selectedBezirk
             .substringAfter("· ")
             .trim()
-        val filtered = SampleData.listings
+        val districtListings = if (state.selectedBezirk == "Wien") {
+            SampleData.listings
+        } else {
+            SampleData.listings.filter { it.district.contains(districtName, ignoreCase = true) }
+        }
+        val offerCount = districtListings.count { it.isOffer }
+        val requestCount = districtListings.count { !it.isOffer }
+        val filtered = districtListings                          // ← districtListings statt SampleData.districtListings
             .filter { it.isOffer == state.isOfferMode }
-            .filter { state.selectedBezirk == "Wien" || it.district.contains(districtName, ignoreCase = true) }
             .filter { state.query.isBlank() || it.title.contains(state.query, ignoreCase = true) }
             .filter { state.selectedCategory == null || it.category == state.selectedCategory }
-        _uiState.update { it.copy(results = filtered) }
+        _uiState.update { it.copy(results = filtered, offerCount = offerCount, requestCount = requestCount) }
     }
 }

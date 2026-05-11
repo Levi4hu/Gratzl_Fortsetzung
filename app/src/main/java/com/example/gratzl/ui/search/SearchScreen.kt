@@ -75,7 +75,9 @@ fun SearchScreen(
         ) {
             Switch(
                 isOfferMode = state.isOfferMode,
-                onToggle = { viewModel.toggleMode(it) }
+                onToggle = { viewModel.toggleMode(it) },
+                offerCount = state.offerCount,
+                requestCount = state.requestCount
             )
 
             Spacer(modifier = Modifier.height(10.dp))

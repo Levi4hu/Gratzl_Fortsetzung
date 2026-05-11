@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.gratzl.shared.theme.Green80
 import com.example.gratzl.shared.theme.Nunito
 
 data class NavItem(
@@ -38,8 +39,6 @@ val navItems = listOf(
     NavItem(Routes.PROFILE, "Profil", Icons.Filled.Person),
 )
 
-val Green = Color(0xFF2A6B45)
-
 @Composable
 fun BottomNavBar(navController: NavController) {
     val currentRoute by navController.currentBackStackEntryAsState()
@@ -48,10 +47,21 @@ fun BottomNavBar(navController: NavController) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp,
+        windowInsets = WindowInsets(0.dp),
         modifier = Modifier.navigationBarsPadding()
     ) {
         navItems.forEach { item ->
-            val isSelected = activeRoute == item.route
+            val isSelected = when (item.route) {
+                Routes.HOME    -> activeRoute == Routes.HOME ||
+                        activeRoute?.startsWith("listing/") == true
+                Routes.SEARCH  -> activeRoute == Routes.SEARCH
+                Routes.CHAT    -> activeRoute == Routes.CHAT ||
+                        activeRoute?.startsWith("chat/") == true
+                Routes.PROFILE -> activeRoute == Routes.PROFILE ||
+                        activeRoute?.startsWith("profile/") == true
+                Routes.ADD_NEW -> activeRoute == Routes.ADD_NEW
+                else           -> false
+            }
             val isCenter = item.route == Routes.ADD_NEW
 
             if (isCenter) {
@@ -59,9 +69,12 @@ fun BottomNavBar(navController: NavController) {
                     selected = false,
                     onClick = {
                         navController.navigate(item.route) {
-                            popUpTo(Routes.HOME) { saveState = true }
+                            popUpTo(Routes.HOME) {
+                                inclusive = false
+                                saveState = false
+                            }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = false
                         }
                     },
                     icon = {
@@ -70,7 +83,7 @@ fun BottomNavBar(navController: NavController) {
                             modifier = Modifier
                                 .size(52.dp)
                                 .clip(CircleShape)
-                                .background(Green)
+                                .background(Green80)
                         ) {
                             Icon(
                                 imageVector = item.icon,
@@ -96,19 +109,20 @@ fun BottomNavBar(navController: NavController) {
                 NavigationBarItem(
                     selected = isSelected,
                     onClick = {
-                        if (activeRoute != item.route) {
-                            navController.navigate(item.route) {
-                                popUpTo(Routes.HOME) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
+                        navController.navigate(item.route) {
+                            popUpTo(Routes.HOME) {
+                                inclusive = false
+                                saveState = false
                             }
+                            launchSingleTop = true
+                            restoreState = false
                         }
                     },
                     icon = {
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
-                            tint = if (isSelected) Green else MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = if (isSelected) Green80 else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(24.dp)
                         )
                     },
@@ -118,13 +132,13 @@ fun BottomNavBar(navController: NavController) {
                             fontFamily = Nunito,
                             fontSize = 11.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            color = if (isSelected) Green else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if (isSelected) Green80 else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = Color.Transparent,
-                        selectedIconColor = Green,
-                        selectedTextColor = Green,
+                        selectedIconColor = Green80,
+                        selectedTextColor = Green80,
                         unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
