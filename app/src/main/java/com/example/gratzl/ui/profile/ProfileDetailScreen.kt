@@ -38,7 +38,7 @@ fun ProfileDetailScreen(
     Scaffold(
         topBar = {
             AppTopBar(
-                title       = "Neue Anzeige",
+                title       = user.name,
                 showBack    = true,
                 showFlagReport = true,
                 onBackClick = onNavigateBack,

@@ -1,5 +1,7 @@
 package com.example.gratzl.data.model
 
+import kotlinx.coroutines.flow.MutableStateFlow
+
 object SampleData {
 
     val users = listOf(
@@ -184,10 +186,16 @@ object SampleData {
         )
     )
 
-    val savedListingIds = listOf(1, 2, 3)
+    val favouriteIds = MutableStateFlow<Set<Int>>(setOf(1, 2, 3))
+
+    fun toggleFavourite(id: Int) {
+        val updated = favouriteIds.value.toMutableSet()
+        if (id in updated) updated.remove(id) else updated.add(id)
+        favouriteIds.value = updated
+    }
 
     val savedListings: List<Listing>
-        get() = listings.filter { it.id in savedListingIds }
+        get() = listings.filter { it.id in favouriteIds.value }
 
     var listings = mutableListOf<Listing>(
         // Innere Stadt

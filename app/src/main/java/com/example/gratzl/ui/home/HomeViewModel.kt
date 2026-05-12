@@ -1,11 +1,13 @@
 package com.example.gratzl.ui.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.gratzl.data.model.Listing
 import com.example.gratzl.data.model.SampleData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 enum class HomeFilter { ALL, ANGEBOTE, ANFRAGEN }
 
@@ -35,7 +37,14 @@ class HomeViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    init { applyFilter() }
+    init {
+        viewModelScope.launch {
+            SampleData.favouriteIds.collect { favs ->
+                _uiState.update { it.copy(favourites = favs) }
+            }
+        }
+        applyFilter()
+    }
 
     fun onFilterChange(filter: HomeFilter) {
         _uiState.update { it.copy(filter = filter) }
@@ -48,11 +57,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun toggleFavourite(listingId: Int) {
-        _uiState.update {
-            val favs = it.favourites.toMutableSet()
-            if (listingId in favs) favs.remove(listingId) else favs.add(listingId)
-            it.copy(favourites = favs)
-        }
+        SampleData.toggleFavourite(listingId)
     }
 
     private fun applyFilter() {

@@ -4,23 +4,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.gratzl.data.model.PriceType
-import com.example.gratzl.shared.components.AppTopBar
 import com.example.gratzl.shared.components.UserAvatar
 import com.example.gratzl.shared.components.UrgencyChip
 import com.example.gratzl.shared.theme.MarktplatzTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListingDetailScreen(
     listingId: Int,
@@ -30,6 +33,7 @@ fun ListingDetailScreen(
     viewModel: ListingDetailViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showReportDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(listingId) {
         viewModel.loadListing(listingId)
@@ -37,6 +41,24 @@ fun ListingDetailScreen(
 
     val listing = state.listing
     val user    = state.user
+
+    if (showReportDialog) {
+        AlertDialog(
+            onDismissRequest = { showReportDialog = false },
+            title = { Text("Anzeige melden") },
+            text = { Text("Möchtest du diese Anzeige wirklich melden?") },
+            dismissButton = {
+                OutlinedButton(onClick = { showReportDialog = false }) {
+                    Text("Abbrechen")
+                }
+            },
+            confirmButton = {
+                Button(onClick = { showReportDialog = false }) {
+                    Text("Melden")
+                }
+            }
+        )
+    }
 
     if (listing == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -48,16 +70,28 @@ fun ListingDetailScreen(
     //Spacer(modifier = Modifier.height(2.dp))
     Scaffold(
         topBar = {
-            AppTopBar(
-                title       = "Anzeige/Gebot switch?",
-                showBack    = true,
-                onBackClick = onNavigateBack,
-                showFavorite = true,
-                isFavorite = state.isFavorite,
-                onFavoriteClick = {
-                    viewModel.toggleFavorite()
-                }
-
+            TopAppBar(
+                title = {
+                    Text(
+                        text = listing.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Zurück")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showReportDialog = true }) {
+                        Icon(Icons.Filled.Flag, contentDescription = "Anzeige melden")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
         bottomBar = {
