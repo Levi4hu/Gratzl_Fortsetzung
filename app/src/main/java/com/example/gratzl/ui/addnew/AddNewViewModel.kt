@@ -13,6 +13,7 @@ data class AddNewUiState(
     val title: String = "",
     val description: String = "",
     val category: String? = null,
+    val district: String? = null,
     val isOffer: Boolean = true,
     val priceType: PriceType = PriceType.FREE,
     val price: String = "",
@@ -36,6 +37,10 @@ class AddNewViewModel : ViewModel() {
 
     fun onCategorySelected(value: String) {
         _uiState.update { it.copy(category = value) }
+    }
+
+    fun onDistrictSelected(value: String) {
+        _uiState.update { it.copy(district = value) }
     }
 
     fun onIsOfferChange(value: Boolean) {
@@ -70,7 +75,7 @@ class AddNewViewModel : ViewModel() {
             description = state.description,
             isOffer     = state.isOffer,
             category    = state.category ?: "Sonstiges",
-            district    = "Wien",
+            district    = state.district?.substringAfter("· ") ?: "Wien",
             priceType   = state.priceType,
             price       = state.price.toDoubleOrNull(),
             urgency     = state.urgency,
