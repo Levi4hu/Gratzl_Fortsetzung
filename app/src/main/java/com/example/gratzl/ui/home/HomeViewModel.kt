@@ -30,6 +30,9 @@ data class HomeUiState(
     val favourites: Set<Int> = emptySet(),
     val forYou: List<Listing> = emptyList(),
     val nearby: List<Listing> = emptyList(),
+    val allCount: Int = 0,
+    val offerCount: Int = 0,
+    val requestCount: Int = 0,
     val savedSearches: List<SavedSearch> = emptyList(),
     val showAddSearchSheet: Boolean = false,
     val newSearchLabel: String = "",
@@ -169,6 +172,17 @@ class HomeViewModel : ViewModel() {
                 }
             }
 
-        _uiState.update { it.copy(forYou = forYou, nearby = nearby) }
+
+        val allCount     = districtFiltered.size
+        val offerCount   = districtFiltered.count { it.isOffer }
+        val requestCount = districtFiltered.count { !it.isOffer }
+
+        _uiState.update { it.copy(
+            forYou       = forYou,
+            nearby       = nearby,
+            allCount     = allCount,
+            offerCount   = offerCount,
+            requestCount = requestCount
+        )}
     }
 }

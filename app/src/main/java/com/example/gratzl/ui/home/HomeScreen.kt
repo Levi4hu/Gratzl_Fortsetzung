@@ -35,9 +35,6 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-
-    // Képernyő szélesség alapján számítjuk a kártya szélességét
-    // Search: 2 oszlop, 16dp padding kétoldalt, 12dp köz = (width - 32 - 12) / 2
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val cardWidth = (screenWidth - 32.dp - 12.dp) / 2
 
@@ -45,7 +42,6 @@ fun HomeScreen(
         viewModel.onDistrictSelected(selectedBezirk)
     }
 
-    // Fullscreen overlay
     if (state.showAddSearchSheet) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -210,6 +206,9 @@ fun HomeScreen(
                 SwitchAll(
                     filter         = state.filter,
                     onFilterChange = viewModel::onFilterChange,
+                    allCount       = state.allCount,
+                    offerCount     = state.offerCount,
+                    requestCount   = state.requestCount,
                     modifier       = Modifier.padding(horizontal = 16.dp)
                 )
             }
