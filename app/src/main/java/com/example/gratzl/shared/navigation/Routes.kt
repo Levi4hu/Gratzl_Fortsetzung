@@ -7,6 +7,9 @@ object Routes {
     const val CHAT    = "chat"
     const val PROFILE = "profile"
 
+    const val ABOUT      = "about"
+    const val ONBOARDING = "onboarding"
+
     const val SAVED_LISTINGS = "saved-listings"
 
     // Detail-Screens mit Parametern:
