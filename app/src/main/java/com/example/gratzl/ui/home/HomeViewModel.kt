@@ -3,7 +3,9 @@ package com.example.gratzl.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gratzl.data.model.Listing
+import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.data.model.SampleData
+import com.example.gratzl.data.model.UrgencyTag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,10 +16,12 @@ enum class HomeFilter { ALL, ANGEBOTE, ANFRAGEN }
 data class SavedSearch(
     val id: Int,
     val label: String,
-    val categoryIcon: String, // einschalten
+    val categoryIcon: String,
     val query: String,
     val category: String?,
-    val isOffer: Boolean
+    val isOffer: Boolean,
+    val priceType: PriceType? = null,
+    val urgency: UrgencyTag? = null
 )
 
 data class HomeUiState(
@@ -26,11 +30,13 @@ data class HomeUiState(
     val favourites: Set<Int> = emptySet(),
     val forYou: List<Listing> = emptyList(),
     val nearby: List<Listing> = emptyList(),
-    val savedSearches: List<SavedSearch> = listOf(
-        SavedSearch(1, "Nachhilfe",   "📚", "Nachhilfe", "Bildung",  true),
-        SavedSearch(2, "Umzugshilfe", "🏠", "Umzug",    "Haushalt", false),
-        SavedSearch(3, "Handwerk",    "🔧", "",          "Handwerk", true)
-    )
+    val savedSearches: List<SavedSearch> = emptyList(),
+    val showAddSearchSheet: Boolean = false,
+    val newSearchLabel: String = "",
+    val newSearchCategory: String? = null,
+    val newSearchIsOffer: Boolean = true,
+    val newSearchPriceType: PriceType = PriceType.FREE,
+    val newSearchUrgency: UrgencyTag = UrgencyTag.FLEXIBLE
 )
 
 class HomeViewModel : ViewModel() {
@@ -58,6 +64,76 @@ class HomeViewModel : ViewModel() {
 
     fun toggleFavourite(listingId: Int) {
         SampleData.toggleFavourite(listingId)
+    }
+
+    fun openAddSearchSheet() {
+        _uiState.update { it.copy(
+            showAddSearchSheet = true,
+            newSearchLabel     = "",
+            newSearchCategory  = null,
+            newSearchIsOffer   = true,
+            newSearchPriceType = PriceType.FREE,
+            newSearchUrgency   = UrgencyTag.FLEXIBLE
+        )}
+    }
+
+    fun closeAddSearchSheet() {
+        _uiState.update { it.copy(showAddSearchSheet = false) }
+    }
+
+    fun onNewSearchLabelChange(value: String) {
+        _uiState.update { it.copy(newSearchLabel = value) }
+    }
+
+    fun onNewSearchCategoryChange(value: String?) {
+        _uiState.update { it.copy(newSearchCategory = value) }
+    }
+
+    fun onNewSearchIsOfferChange(value: Boolean) {
+        _uiState.update { it.copy(newSearchIsOffer = value) }
+    }
+
+    fun onNewSearchPriceTypeChange(value: PriceType) {
+        _uiState.update { it.copy(newSearchPriceType = value) }
+    }
+
+    fun onNewSearchUrgencyChange(value: UrgencyTag) {
+        _uiState.update { it.copy(newSearchUrgency = value) }
+    }
+
+    fun saveNewSearch() {
+        val state = _uiState.value
+        if (state.newSearchLabel.isBlank()) return
+
+        val icon = when (state.newSearchCategory) {
+            "Bildung"  -> "📚"
+            "Haushalt" -> "🏠"
+            "Handwerk" -> "🔧"
+            "Garten"   -> "🌿"
+            else       -> "🔍"
+        }
+
+        val newSearch = SavedSearch(
+            id           = (state.savedSearches.maxOfOrNull { it.id } ?: 0) + 1,
+            label        = state.newSearchLabel,
+            categoryIcon = icon,
+            query        = state.newSearchLabel,
+            category     = state.newSearchCategory,
+            isOffer      = state.newSearchIsOffer,
+            priceType    = state.newSearchPriceType,
+            urgency      = state.newSearchUrgency
+        )
+
+        _uiState.update { it.copy(
+            savedSearches      = it.savedSearches + newSearch,
+            showAddSearchSheet = false
+        )}
+    }
+
+    fun deleteSavedSearch(id: Int) {
+        _uiState.update {
+            it.copy(savedSearches = it.savedSearches.filter { s -> s.id != id })
+        }
     }
 
     private fun applyFilter() {
