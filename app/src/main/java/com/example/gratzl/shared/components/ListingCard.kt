@@ -86,7 +86,6 @@ fun ListingCard(
     modifier: Modifier = Modifier
 ) {
     val accentColor = if (listing.isOffer) Green80 else Teal80
-    val bgColor     = accentColor.copy(alpha = 0.12f)
     val imageUrl    = getImageUrlForListing(listing)
 
     Card(
@@ -107,28 +106,19 @@ fun ListingCard(
                     .fillMaxWidth()
                     .height(100.dp)
             ) {
-                if (imageUrl != null) {
-                    AsyncImage(
-                        model              = imageUrl,
-                        contentDescription = listing.category,
-                        contentScale       = ContentScale.Crop,
-                        modifier           = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.15f))
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(bgColor)
-                    )
-
-                }
+                AsyncImage(
+                    model              = imageUrl,
+                    contentDescription = listing.category,
+                    contentScale       = ContentScale.Crop,
+                    modifier           = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.15f))
+                )
 
                 // Kategorie Chip immer oben links
                 Box(

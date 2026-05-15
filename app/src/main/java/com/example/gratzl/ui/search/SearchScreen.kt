@@ -170,7 +170,7 @@ fun SearchScreen(
 
             // Suchfeld + Filter Button
             Row(
-                modifier          = Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,

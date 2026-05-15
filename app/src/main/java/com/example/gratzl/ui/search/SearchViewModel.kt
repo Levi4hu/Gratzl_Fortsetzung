@@ -2,7 +2,6 @@ package com.example.gratzl.ui.search
 
 import androidx.lifecycle.ViewModel
 import com.example.gratzl.data.model.Listing
-import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.data.model.SampleData
 import com.example.gratzl.ui.home.HomeFilter
 import kotlinx.coroutines.flow.MutableStateFlow

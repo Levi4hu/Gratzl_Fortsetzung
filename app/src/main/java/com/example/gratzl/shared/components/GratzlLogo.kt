@@ -94,7 +94,6 @@ fun GraetzelLogo(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .menuAnchor()
                         .clickable { expanded = true }
                 ) {
                     Icon(
