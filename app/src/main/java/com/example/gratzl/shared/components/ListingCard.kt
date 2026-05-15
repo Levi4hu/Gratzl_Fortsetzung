@@ -24,12 +24,6 @@ import com.example.gratzl.shared.theme.Green80
 import com.example.gratzl.shared.theme.Nunito
 import com.example.gratzl.shared.theme.Teal80
 
-val categoryEmoji = mapOf(
-    "Garten"   to "🌿",
-    "Bildung"  to "📚",
-    "Haushalt" to "🏠",
-    "Handwerk" to "🔧",
-)
 
 fun getImageUrlForListing(listing: Listing): String {
     val title = listing.title.lowercase()
@@ -93,7 +87,6 @@ fun ListingCard(
 ) {
     val accentColor = if (listing.isOffer) Green80 else Teal80
     val bgColor     = accentColor.copy(alpha = 0.12f)
-    val emoji       = categoryEmoji[listing.category] ?: "✨"
     val imageUrl    = getImageUrlForListing(listing)
 
     Card(
@@ -134,13 +127,7 @@ fun ListingCard(
                             .fillMaxSize()
                             .background(bgColor)
                     )
-                    Text(
-                        emoji,
-                        fontSize = 28.sp,
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(10.dp)
-                    )
+
                 }
 
                 // Kategorie Chip immer oben links
