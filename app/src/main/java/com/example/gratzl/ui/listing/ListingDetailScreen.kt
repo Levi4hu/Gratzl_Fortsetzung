@@ -13,14 +13,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.shared.components.UserAvatar
 import com.example.gratzl.shared.components.UrgencyChip
+import com.example.gratzl.shared.components.getImageUrlForListing
 import com.example.gratzl.shared.theme.MarktplatzTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,17 +140,18 @@ fun ListingDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    listing.category,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                AsyncImage(
+                    model              = getImageUrlForListing(listing),
+                    contentDescription = listing.category,
+                    contentScale       = ContentScale.Crop,
+                    modifier           = Modifier.fillMaxSize()
                 )
-
-                // Bildrahmen oder vllt clickable action für die fulscreen bild ansicht?
-
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.15f))
+                )
             }
 
             Column(modifier = Modifier.padding(16.dp)) {
