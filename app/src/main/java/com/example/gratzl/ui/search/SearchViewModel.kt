@@ -94,7 +94,7 @@ class SearchViewModel : ViewModel() {
 
         // fake distance filter — nimmt einfach die ersten N Ergebnisse
         filtered = when (state.distanceFilter) {
-            DistanceFilter.ALL     -> filtered
+            DistanceFilter.ALL      -> filtered
             DistanceFilter.NEAR_1KM -> filtered.take((filtered.size * 0.3f).toInt().coerceAtLeast(1))
             DistanceFilter.NEAR_3KM -> filtered.take((filtered.size * 0.6f).toInt().coerceAtLeast(1))
             DistanceFilter.NEAR_5KM -> filtered.take((filtered.size * 0.85f).toInt().coerceAtLeast(1))

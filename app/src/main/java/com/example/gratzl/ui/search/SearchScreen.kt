@@ -55,7 +55,7 @@ fun SearchScreen(
             sheetState       = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ) {
             Column(
-                modifier            = Modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 32.dp),
@@ -206,7 +206,7 @@ fun SearchScreen(
 
             if (state.results.isEmpty()) {
                 Box(
-                    modifier         = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -239,10 +239,10 @@ fun SearchScreen(
                                 modifier = Modifier.align(Alignment.TopEnd)
                             ) {
                                 Icon(
-                                    imageVector        = if (listing.id in state.favourites)
+                                    imageVector = if (listing.id in state.favourites)
                                         Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                                     contentDescription = "Favorit",
-                                    tint               = if (listing.id in state.favourites)
+                                    tint = if (listing.id in state.favourites)
                                         Color.Red else MaterialTheme.colorScheme.onSurface
                                 )
                             }
