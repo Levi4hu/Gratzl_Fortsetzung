@@ -1,10 +1,14 @@
 package com.example.gratzl.ui.listing
 
+import android.widget.Toast
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Flag
@@ -14,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.gratzl.data.model.PriceType
+import com.example.gratzl.data.model.SampleData
 import com.example.gratzl.shared.components.UserAvatar
 import com.example.gratzl.shared.components.UrgencyChip
 import com.example.gratzl.shared.components.getImageUrlForListing
@@ -37,6 +44,8 @@ fun ListingDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     var showReportDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val showWorkInProgress = { Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show() }
 
     LaunchedEffect(listingId) {
         viewModel.loadListing(listingId)
@@ -98,8 +107,6 @@ fun ListingDetailScreen(
             )
         },
         bottomBar = {
-            val chat = com.example.gratzl.data.model.SampleData
-                .getChatForListing(listing.id)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,9 +129,18 @@ fun ListingDetailScreen(
                 }
 
                 Button(
-                    onClick  = { chat?.let { onNavigateToChat(it.id) } },
+                    onClick = {
+                        val existingChat = SampleData.chats.firstOrNull { it.partnerId == user?.id }
+                        if (existingChat != null) {
+                            onNavigateToChat(existingChat.id)
+                        } else {
+                            showWorkInProgress()
+                        }
+                    },
                     modifier = Modifier.weight(15f)
                 ) {
+                    Icon(imageVector = Icons.Filled.Chat, contentDescription = null)
+                    Spacer(modifier = Modifier.width(10.dp))
                     Text("Nachricht senden")
                 }
             }
@@ -134,6 +150,7 @@ fun ListingDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
             // Bild-Platzhalter // Rounden
             Box(
@@ -164,54 +181,69 @@ fun ListingDetailScreen(
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                // User Info
+                // User Info + Urgency
                 if (user != null) {
                     Row(
-                        modifier = Modifier.clickable {
-                            user?.let { onNavigateToProfile(it.id) }
-                        },
+                        modifier = Modifier
+                            .clickable { onNavigateToProfile(user.id) },
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        UserAvatar(user = user, size = 45.dp)
-                        Text(user.name, style = MaterialTheme.typography.bodySmall)
-                        Text("·", style = MaterialTheme.typography.bodySmall)
-                        Text(
-                            "★ ${user.rating}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
+                        UserAvatar(user = user, size = 56.dp)
+                        Column {
+                            Text(user.name, style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                "★ ${user.rating}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
                     }
                 }
 
-                //Spacer(modifier = Modifier.height(-3.dp)) Unter PB ? gerade rausgelöscht weil zu viel
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Tags
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    UrgencyChip(urgency = listing.urgency)
-                    SuggestionChip(
-                        onClick = {},
-                        label   = {
+                // Tags-Tabelle
+                val labelWidth = 110.dp
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    @Composable
+                    fun TableRow(label: String, content: @Composable () -> Unit) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                when (listing.priceType) {
-                                    PriceType.FREE     -> "Kostenlos"
-                                    PriceType.TRADE    -> "Tausch"
-                                    PriceType.COFFEE   -> "Kaffee"
-                                    PriceType.PER_HOUR -> "${listing.price?.toInt()} € / Std"
-                                    PriceType.FIXED    -> "${listing.price?.toInt()} €"
-                                }
+                                label,
+                                modifier = Modifier.width(labelWidth),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold
                             )
+                            content()
                         }
-                    )
-                    SuggestionChip(
-                        onClick = {},
-                        label   = { Text(listing.district) }
-                    )
+                    }
+                    TableRow("Dringlichkeit:") { UrgencyChip(urgency = listing.urgency) }
+                    TableRow("Preis:") {
+                        SuggestionChip(
+                            onClick = {},
+                            label = {
+                                Text(
+                                    when (listing.priceType) {
+                                        PriceType.FREE     -> "Kostenlos"
+                                        PriceType.TRADE    -> "Tausch"
+                                        PriceType.COFFEE   -> "Kaffee"
+                                        PriceType.PER_HOUR -> "${listing.price?.toInt()} € / Std"
+                                        PriceType.FIXED    -> "${listing.price?.toInt()} €"
+                                    }
+                                )
+                            }
+                        )
+                    }
+                    TableRow("Bezirk:") { SuggestionChip(onClick = {}, label = { Text(listing.district) }) }
+                    TableRow("Kategorie:") { SuggestionChip(onClick = {}, label = { Text(listing.category) }) }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Beschreibung
+                Text("Beschreibung:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     listing.description,
                     style = MaterialTheme.typography.bodyMedium

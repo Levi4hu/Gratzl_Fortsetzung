@@ -15,9 +15,9 @@ import com.example.gratzl.shared.theme.Orange80
 @Composable
 fun UrgencyChip(urgency: UrgencyTag) {
     val label = when (urgency) {
-        UrgencyTag.FLEXIBLE -> "Flexible"
-        UrgencyTag.TODAY    -> "Today"
-        UrgencyTag.URGENT   -> "Urgent" //Dringend FireEmotio
+        UrgencyTag.FLEXIBLE -> "Flexibel"
+        UrgencyTag.TODAY    -> "Heute"
+        UrgencyTag.URGENT   -> "Dringend"
     }
     Surface(
         shape = RoundedCornerShape(20.dp),
@@ -25,8 +25,8 @@ fun UrgencyChip(urgency: UrgencyTag) {
     ) {
         Text(
             text     = label,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
-            style    = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+            style    = MaterialTheme.typography.bodyMedium,
             color    = Orange80
         )
     }
