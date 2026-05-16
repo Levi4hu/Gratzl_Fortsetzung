@@ -16,7 +16,8 @@ data class ChatListItemUi(
     val chat: Chat,
     val listing: Listing,
     val partner: UserProfile,
-    val lastMessage: ChatMessage?
+    val lastMessage: ChatMessage?,
+    val isCurrentUserListing: Boolean
 )
 
 data class ChatListUiState(
@@ -24,6 +25,14 @@ data class ChatListUiState(
     val isOfferMode: Boolean = true,
     val chats: List<ChatListItemUi> = emptyList()
 )
+
+enum class ReportReason(val label: String) {
+    SUSPICIOUS("Verdächtiges Verhalten"),
+    HARASSMENT("Belästigung"),
+    INSULT("Beleidigung"),
+    INAPPROPRIATE("Unangemessene Inhalte"),
+    OTHER("Andere Gründe")
+}
 
 data class ChatDetailUiState(
     val chat: Chat? = null,
@@ -38,7 +47,9 @@ data class ChatDetailUiState(
     val requestDateError: String? = null,
     val requestPriceError: String? = null,
     val requestDetailsError: String? = null,
-    val showReportDialog: Boolean = false
+    val showReportScreen: Boolean = false,
+    val selectedReportReason: ReportReason? = null,
+    val reportDetails: String = ""
 )
 
 class ChatViewModel : ViewModel() {
@@ -188,12 +199,31 @@ class ChatViewModel : ViewModel() {
         updateLoadedChat(chat.id)
     }
 
-    fun openReportDialog() {
-        _detailUiState.update { it.copy(showReportDialog = true) }
+    fun openReportScreen() {
+        _detailUiState.update { it.copy(showReportScreen = true) }
     }
 
-    fun closeReportDialog() {
-        _detailUiState.update { it.copy(showReportDialog = false) }
+    fun closeReportScreen() {
+        _detailUiState.update {
+            it.copy(
+                showReportScreen = false,
+                selectedReportReason = null,
+                reportDetails = ""
+            )
+        }
+    }
+
+    fun onReportReasonSelected(reason: ReportReason) {
+        _detailUiState.update { it.copy(selectedReportReason = reason) }
+    }
+
+    fun onReportDetailsChange(value: String) {
+        _detailUiState.update { it.copy(reportDetails = value.take(400)) }
+    }
+
+    fun sendReport() {
+        if (_detailUiState.value.selectedReportReason == null) return
+        closeReportScreen()
     }
 
     private fun applyChatFilters() {
@@ -209,7 +239,8 @@ class ChatViewModel : ViewModel() {
                 chat = chat,
                 listing = listing,
                 partner = partner,
-                lastMessage = lastMessage
+                lastMessage = lastMessage,
+                isCurrentUserListing = listing.userId == CurrentUserId
             )
         }.filter { item ->
             item.listing.isOffer == state.isOfferMode

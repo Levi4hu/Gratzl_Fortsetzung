@@ -1,6 +1,7 @@
 package com.example.gratzl.ui.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -33,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -74,6 +77,17 @@ fun ChatScreen(
     val listing = state.listing
     val partner = state.partner
 
+    if (state.showReportScreen) {
+        ReportScreen(
+            state = state,
+            onNavigateBack = { viewModel.closeReportScreen() },
+            onReasonSelected = { viewModel.onReportReasonSelected(it) },
+            onDetailsChange = { viewModel.onReportDetailsChange(it) },
+            onSendReport = { viewModel.sendReport() }
+        )
+        return
+    }
+
     if (state.showRequestDialog) {
         RequestDialog(
             state = state,
@@ -85,20 +99,13 @@ fun ChatScreen(
         )
     }
 
-    if (state.showReportDialog) {
-        ReportDialog(
-            onDismiss = { viewModel.closeReportDialog() },
-            onConfirm = { viewModel.closeReportDialog() }
-        )
-    }
-
     Scaffold(
         topBar = {
             ChatTopBar(
                 title = listing?.title ?: "Chat",
                 subtitle = listing?.let { priceLabel(it.priceType, it.price) }.orEmpty(),
                 onNavigateBack = onNavigateBack,
-                onReportClick = { viewModel.openReportDialog() }
+                onReportClick = { viewModel.openReportScreen() }
             )
         },
         bottomBar = {
@@ -151,6 +158,142 @@ fun ChatScreen(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReportScreen(
+    state: ChatDetailUiState,
+    onNavigateBack: () -> Unit,
+    onReasonSelected: (ReportReason) -> Unit,
+    onDetailsChange: (String) -> Unit,
+    onSendReport: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Nutzer melden",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Zurück")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
+            )
+        },
+        bottomBar = {
+            Surface(
+                tonalElevation = 2.dp,
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    OutlinedTextField(
+                        value = state.reportDetails,
+                        onValueChange = onDetailsChange,
+                        label = { Text("Was ist passiert?") },
+                        placeholder = { Text("Beschreibe kurz, was passiert ist...") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 96.dp),
+                        shape = RoundedCornerShape(15.dp),
+                        minLines = 3,
+                        maxLines = 4,
+                        supportingText = {
+                            Text("${state.reportDetails.length}/400")
+                        }
+                    )
+
+                    Button(
+                        onClick = onSendReport,
+                        enabled = state.selectedReportReason != null,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Meldung senden")
+                    }
+                }
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Column {
+                    Text(
+                        text = "Warum möchtest du diesen Nutzer melden?",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "Wir prüfen deine Meldung sorgfältig. Der Nutzer erfährt nicht, wer die Meldung gesendet hat.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 6.dp)
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                ReportReason.values().forEach { reason ->
+                    ReportReasonRow(
+                        reason = reason,
+                        selected = state.selectedReportReason == reason,
+                        onClick = { onReasonSelected(reason) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ReportReasonRow(
+    reason: ReportReason,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onClick
+        )
+        Text(
+            text = reason.label,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
@@ -427,30 +570,6 @@ private fun RequestDialog(
         confirmButton = {
             Button(onClick = onSend) {
                 Text("Senden")
-            }
-        }
-    )
-}
-
-@Composable
-private fun ReportDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Nutzer melden") },
-        text = {
-            Text("Möchtest du diesen Chat wirklich melden?")
-        },
-        dismissButton = {
-            OutlinedButton(onClick = onDismiss) {
-                Text("Abbrechen")
-            }
-        },
-        confirmButton = {
-            Button(onClick = onConfirm) {
-                Text("Melden")
             }
         }
     )

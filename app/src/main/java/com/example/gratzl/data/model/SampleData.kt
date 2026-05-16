@@ -481,10 +481,10 @@ object SampleData {
             listingId = 1,
             partnerId = 2,
             messages = listOf(
-                ChatMessage(1, 1, 2, "Hallo Anna, ist ein Nachhilfeplatz noch frei?", "14:30"),
-                ChatMessage(2, 1, 1, "Ja, diese Woche habe ich noch Zeit.", "14:32"),
-                ChatMessage(3, 1, 2, "Perfekt. Passt Donnerstag um 17 Uhr?", "14:35"),
-                ChatMessage(4, 1, 1, "Donnerstag passt gut. Ich bereite Aufgaben vor.", "14:38"),
+                ChatMessage(1, 1, 2, "Hallo Sophie, ich kann dir beim wöchentlichen Einkauf helfen.", "14:30"),
+                ChatMessage(2, 1, 1, "Danke Markus, das wäre super. Es geht meistens um Lebensmittel.", "14:32"),
+                ChatMessage(3, 1, 2, "Passt gut. Soll ich am Freitagvormittag vorbeikommen?", "14:35"),
+                ChatMessage(4, 1, 1, "Freitag passt. Ich schreibe dir vorher die Einkaufsliste.", "14:38"),
             )
         ),
         Chat(
@@ -492,32 +492,54 @@ object SampleData {
             listingId = 2,
             partnerId = 2,
             messages = listOf(
-                ChatMessage(5, 2, 1, "Hallo Ben, ich kann dir am Samstag beim Umzug helfen.", "Gestern"),
-                ChatMessage(6, 2, 2, "Super, wir starten um 9 Uhr in Mariahilf.", "Gestern"),
-                ChatMessage(7, 2, 1, "Passt. Soll ich Werkzeug mitbringen?", "Gestern"),
-                ChatMessage(8, 2, 2, "Ein Akkuschrauber wäre sehr hilfreich.", "Heute"),
+                ChatMessage(5, 2, 1, "Hallo Markus, ich interessiere mich für die Wohnungsreinigung.", "Gestern"),
+                ChatMessage(6, 2, 2, "Gerne, es geht um eine gründliche Endreinigung nach dem Auszug.", "Gestern"),
+                ChatMessage(7, 2, 1, "Kannst du auch Küche und Bad komplett übernehmen?", "Gestern"),
+                ChatMessage(8, 2, 2, "Ja, das ist im Preis dabei. Ich bringe die Reinigungsmittel mit.", "Heute"),
             )
         ),
         Chat(
             id = 3,
             listingId = 3,
-            partnerId = 3,
+            partnerId = 5,
             messages = listOf(
-                ChatMessage(9, 3, 1, "Hallo Kali, ich habe ein Problem mit dem Waschbecken.", "Mo"),
-                ChatMessage(10, 3, 3, "Kannst du mir ein Foto und den Bezirk schicken?", "Mo"),
-                ChatMessage(11, 3, 1, "Donaustadt, der Ablauf ist undicht.", "Mo"),
-                ChatMessage(12, 3, 3, "Ich kann morgen am Nachmittag vorbeikommen.", "Mo"),
+                ChatMessage(9, 3, 1, "Hallo Anna, ich suche Unterstützung in Englisch.", "Mo"),
+                ChatMessage(10, 3, 5, "Sehr gerne. Für welche Schulstufe ist die Nachhilfe?", "Mo"),
+                ChatMessage(11, 3, 1, "Für die 8. Klasse, vor allem Grammatik und Schreiben.", "Mo"),
+                ChatMessage(12, 3, 5, "Das passt gut. Ich kann am Mittwoch eine Probestunde anbieten.", "Mo"),
             )
         ),
         Chat(
             id = 4,
             listingId = 4,
-            partnerId = 4,
+            partnerId = 6,
             messages = listOf(
-                ChatMessage(13, 4, 1, "Hallo Luca, ich brauche Hilfe bei einer Kotlin-Aufgabe.", "So"),
-                ChatMessage(14, 4, 4, "Gerne. Geht es um Compose oder Grundlagen?", "So"),
-                ChatMessage(15, 4, 1, "Es geht um Navigation in Compose.", "So"),
-                ChatMessage(16, 4, 4, "Das kann ich dir heute Abend erklären.", "So"),
+                ChatMessage(13, 4, 1, "Hallo Peter, ich brauche Hilfe mit zwei defekten Steckdosen.", "So"),
+                ChatMessage(14, 4, 6, "Kann ich mir anschauen. Ist der Stromkreis schon ausgeschaltet?", "So"),
+                ChatMessage(15, 4, 1, "Ja, die Sicherung ist draußen. Es ist in der Küche.", "So"),
+                ChatMessage(16, 4, 6, "Gut, dann komme ich morgen am Vormittag vorbei.", "So"),
+            )
+        ),
+        Chat(
+            id = 5,
+            listingId = 11,
+            partnerId = 2,
+            messages = listOf(
+                ChatMessage(17, 5, 2, "Hallo Sophie, bietest du noch Mathe-Nachhilfe an?", "09:10"),
+                ChatMessage(18, 5, 1, "Ja, ich habe nächste Woche noch zwei freie Termine.", "09:14"),
+                ChatMessage(19, 5, 2, "Super. Es geht um Brüche und Gleichungen, 6. Klasse.", "09:18"),
+                ChatMessage(20, 5, 1, "Das passt gut. Dienstag um 16 Uhr wäre möglich.", "09:22"),
+            )
+        ),
+        Chat(
+            id = 6,
+            listingId = 7,
+            partnerId = 3,
+            messages = listOf(
+                ChatMessage(21, 6, 1, "Hallo Kali, ich kann dir beim IKEA Möbelaufbau helfen.", "Heute"),
+                ChatMessage(22, 6, 3, "Danke Sophie. Es sind ein Kleiderschrank und ein kleines Regal.", "Heute"),
+                ChatMessage(23, 6, 1, "Kein Problem. Hast du schon das passende Werkzeug vor Ort?", "Heute"),
+                ChatMessage(24, 6, 3, "Schraubenzieher habe ich, einen Akkuschrauber leider nicht.", "Heute"),
             )
         ),
     )
@@ -534,4 +556,3 @@ object SampleData {
         chats[index] = chat.copy(messages = chat.messages + message)
     }
 }
-

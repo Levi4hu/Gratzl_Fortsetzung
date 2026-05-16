@@ -4,14 +4,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -119,12 +122,18 @@ private fun ChatListRow(
                 UserAvatar(user = item.partner, size = 52.dp)
             },
             headlineContent = {
-                Text(
-                    text = item.listing.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    ListingOwnerIcon(isCurrentUserListing = item.isCurrentUserListing)
+                    Text(
+                        text = item.listing.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             },
             supportingContent = {
                 Column {
@@ -155,6 +164,20 @@ private fun ChatListRow(
             )
         )
     }
+}
+
+@Composable
+private fun ListingOwnerIcon(isCurrentUserListing: Boolean) {
+    Icon(
+        imageVector = if (isCurrentUserListing) Icons.Filled.Home else Icons.Filled.Person,
+        contentDescription = if (isCurrentUserListing) "Dein Inserat" else "Anderes Inserat",
+        tint = if (isCurrentUserListing) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.secondary
+        },
+        modifier = Modifier.size(18.dp)
+    )
 }
 
 @Preview(showBackground = true)
