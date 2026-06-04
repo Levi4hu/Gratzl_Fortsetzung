@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gratzl.data.model.Listing
 import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.data.model.UrgencyTag
+import com.example.gratzl.shared.components.BezirkDropdown
 import com.example.gratzl.shared.components.GraetzelLogo
 import com.example.gratzl.shared.components.ListingCard
 import com.example.gratzl.shared.components.Switch as OfferSwitch
@@ -36,12 +37,13 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val cardWidth = (screenWidth - 32.dp - 12.dp) / 2
+    val cardWidth   = (screenWidth - 32.dp - 12.dp) / 2
 
     LaunchedEffect(selectedBezirk) {
         viewModel.onDistrictSelected(selectedBezirk)
     }
 
+    // Fullscreen Overlay — neue gespeicherte Suche
     if (state.showAddSearchSheet) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -75,6 +77,27 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    // Info Hinweis
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Info,
+                            contentDescription = null,
+                            tint     = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text  = "Gespeicherte Suchen sind nur auf dem Home-Screen sichtbar, können aber hier und in der Suche erstellt werden.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
                     OfferSwitch(
                         isOfferMode = state.newSearchIsOffer,
                         onToggle    = { viewModel.onNewSearchIsOfferChange(it) }
@@ -90,7 +113,7 @@ fun HomeScreen(
                         singleLine    = true
                     )
 
-                    val categories = listOf("Bildung", "Haushalt", "Handwerk", "Garten", "Sonstiges")
+                    val categories  = listOf("Bildung", "Haushalt", "Handwerk", "Garten", "Sonstiges")
                     var catExpanded by remember { mutableStateOf(false) }
 
                     ExposedDropdownMenuBox(
@@ -179,13 +202,16 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
+            Row(
+                modifier              = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment     = Alignment.CenterVertically
             ) {
-                GraetzelLogo(
+                GraetzelLogo()
+                BezirkDropdown(
                     selectedBezirk = selectedBezirk,
                     onBezirkChange = { newBezirk ->
                         onBezirkChange(newBezirk)
@@ -343,10 +369,7 @@ private fun HomeSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment     = Alignment.CenterVertically
         ) {
-            Text(
-                text  = title,
-                style = MaterialTheme.typography.titleMedium
-            )
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
             TextButton(onClick = onShowAll) {
                 Text(
                     text  = "Alles anzeigen",

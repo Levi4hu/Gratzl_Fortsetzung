@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.gratzl.data.model.Listing
 import com.example.gratzl.data.model.PriceType
 import com.example.gratzl.data.model.SampleData
+import com.example.gratzl.data.model.SavedSearch
 import com.example.gratzl.data.model.UrgencyTag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,17 +13,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class HomeFilter { ALL, ANGEBOTE, ANFRAGEN }
-
-data class SavedSearch(
-    val id: Int,
-    val label: String,
-    val categoryIcon: String,
-    val query: String,
-    val category: String?,
-    val isOffer: Boolean,
-    val priceType: PriceType? = null,
-    val urgency: UrgencyTag? = null
-)
 
 data class HomeUiState(
     val filter: HomeFilter = HomeFilter.ALL,
@@ -50,6 +40,11 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             SampleData.favouriteIds.collect { favs ->
                 _uiState.update { it.copy(favourites = favs) }
+            }
+        }
+        viewModelScope.launch {
+            SampleData.savedSearches.collect { searches ->
+                _uiState.update { it.copy(savedSearches = searches) }
             }
         }
         applyFilter()
@@ -117,7 +112,7 @@ class HomeViewModel : ViewModel() {
         }
 
         val newSearch = SavedSearch(
-            id           = (state.savedSearches.maxOfOrNull { it.id } ?: 0) + 1,
+            id           = SampleData.nextSavedSearchId(),
             label        = state.newSearchLabel,
             categoryIcon = icon,
             query        = state.newSearchLabel,
@@ -127,16 +122,12 @@ class HomeViewModel : ViewModel() {
             urgency      = state.newSearchUrgency
         )
 
-        _uiState.update { it.copy(
-            savedSearches      = it.savedSearches + newSearch,
-            showAddSearchSheet = false
-        )}
+        SampleData.addSavedSearch(newSearch)
+        _uiState.update { it.copy(showAddSearchSheet = false) }
     }
 
     fun deleteSavedSearch(id: Int) {
-        _uiState.update {
-            it.copy(savedSearches = it.savedSearches.filter { s -> s.id != id })
-        }
+        SampleData.removeSavedSearch(id)
     }
 
     private fun applyFilter() {
@@ -171,7 +162,6 @@ class HomeViewModel : ViewModel() {
                     HomeFilter.ANFRAGEN -> !it.isOffer
                 }
             }
-
 
         val allCount     = districtFiltered.size
         val offerCount   = districtFiltered.count { it.isOffer }
