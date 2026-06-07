@@ -102,8 +102,14 @@ class SearchViewModel : ViewModel() {
 
         filtered = when (state.priceSortOrder) {
             PriceSortOrder.NONE -> filtered
-            PriceSortOrder.ASC  -> filtered.sortedWith(compareBy { it.price ?: 0f })
-            PriceSortOrder.DESC -> filtered.sortedWith(compareByDescending { it.price ?: 0f })
+            PriceSortOrder.ASC  -> {
+                val (noPrice, withPrice) = filtered.partition { it.price == null }
+                noPrice + withPrice.sortedBy { it.price }
+            }
+            PriceSortOrder.DESC -> {
+                val (noPrice, withPrice) = filtered.partition { it.price == null }
+                withPrice.sortedByDescending { it.price } + noPrice
+            }
         }
 
         _uiState.update {
