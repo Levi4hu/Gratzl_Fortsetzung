@@ -21,4 +21,4 @@ Weitere Anmerkungen:
 - Architektur: MVVM (Model-View-ViewModel) mit Jetpack Compose
 - Die App wurde für Wien entwickelt und zeigt Nachbarschafts-Dienstleistungen (Angebote & Anfragen) nach Bezirk gefiltert
 - Alle Daten sind Sample-Daten (kein Backend)
-- Teile der Implementierung wurden mithilfe von Claude / ChatGPT als KI-Coding-Assistent erstellt/angepasst. Konzeption, Architektur und inhaltliche Entscheidungen stammen vom Autor. (genaueres wurde Dokumentiert)
+- Teile der Implementierung wurden mithilfe von Claude / ChatGPT als KI-Coding-Assistent erstellt/angepasst. Konzeption, Architektur und inhaltliche Entscheidungen stammen vom Autor. (genaueres wurde Dokumentiert)## Fortsetzung des Projekts
